@@ -11,7 +11,7 @@ For every picked element, count its occurrences by traversing the array, if coun
 //-------------------------------------------------------------------
 
 //Approach 3: Hashing
-//Time Complexity: O(n); Space Complexity: O(1)
+//Time Complexity: O(n); Space Complexity: O(n)
 
 #include<bits/stdc++.h>
 using namespace std;
