@@ -1,3 +1,4 @@
+//Approach: Binary Search
 bool isPossible(vector<int> &stalls, int k, int mid){
     int cowCount = 1;	//start with first cow
     int lastPosition = stalls[0];	//last position is the position where we kept first cow and from where we are measuring safe distance
