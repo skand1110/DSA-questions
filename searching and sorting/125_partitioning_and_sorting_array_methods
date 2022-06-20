@@ -1,0 +1,84 @@
+Trivial implementation of the Quicksort algorithm has a poor performance for repeated elements.
+We’ll learn a few Quicksort variants to efficiently partition and sort inputs with a high density of duplicate keys.
+Quicksort is an efficient sorting algorithm based on the divide and conquer paradigm. 
+Functionally speaking, it operates in-place on the input array and rearranges the elements with simple comparison and swap operations.
+
+2.1. Single-pivot Partitioning
+A trivial implementation of the Quicksort algorithm relies heavily on a single-pivot partitioning procedure. 
+In other words, partitioning divides the array A=[ap, ap+1, ap+2,…, ar] into two parts A[p..q] and A[q+1..r] such that:
+-> All elements in the first partition, A[p..q] are lesser than or equal to the pivot value A[q]
+-> All elements in the second partition, A[q+1..r] are greater than or equal to the pivot value A[q]
+
+After that, the two partitions are treated as independent input arrays and fed themselves to the Quicksort algorithm. 
+On partitioning this array with the single-pivot partitioning scheme, we'll get two partitions. The first partition will be empty, 
+while the second partition will have N-1 elements. 
+Further, each subsequent invocation of the partition procedure will reduce the input size by only one. 
+
+Three-way Partitioning
+To efficiently sort an array having a high number of repeated keys, we can choose to handle the equal keys more responsibly. 
+The idea is to place them in the right position when we first encounter them. So, what we're looking for is a three partition state of the array:
+-> The left-most partition contains elements which are strictly less than the partitioning key
+-> The middle partition contains all elements which are equal to the partitioning key
+-> The right-most partition contains all elements which are strictly greater than the partitioning key
+
+Dijkstra's Approach
+Dijkstra's approach is an effective way of doing three-way partitioning. To understand this, let's look into a classic programming problem.
+
+4.1. Dutch National Flag Problem
+Inspired by the tricolor flag of the Netherlands, Edsger Dijkstra proposed a programming problem called the Dutch National Flag Problem (DNF).
+
+In a nutshell, it's a rearrangement problem where we're given balls of three colors placed randomly in a line, 
+and we're asked to group the same colored balls together. Moreover, the rearrangement must ensure that groups follow the correct order.
+
+Interestingly, the DNF problem makes a striking analogy with the 3-way partitioning of an array with repeated elements.
+We can categorize all the numbers of an array into three groups with respect to a given key:
+
+-> The Red group contains all elements that are strictly lesser than the key
+-> The White group contains all elements that are equal to the key
+-> The Blue group contains all elements that strictly greater than the key
+
+Bentley-McIlroy's Approach
+Jon Bentley and Douglas McIlroy co-authored an optimized version of the Quicksort algorithm. 
+
+Partitioning Scheme
+The crux of the algorithm is an iteration-based partitioning scheme. In the start, the entire array of numbers is an unexplored territory for us:
+        | UNEXPLORED |
+
+We then start exploring the elements of the array from the left and right direction. 
+Whenever we enter or leave the loop of exploration, we can visualize the array as a composition of five regions:
+          | EQUAL | LESS | UNEXPLORED | GREATER | EQUAL |
+
+On the extreme two ends, lies the regions having elements that are equal to the partitioning value
+The unexplored region stays in the center and its size keeps on shrinking with each iteration
+On the left of the unexplored region lies all elements lesser than the partitioning value
+On the right side of the unexplored region are elements greater than the partitioning value
+
+Eventually, our loop of exploration terminates when there are no elements to be explored anymore. 
+At this stage, the size of the unexplored region is effectively zero, and we're left with only four regions:
+            | EQUAL | LESS | GREATER | EQUAL |
+
+Next, we move all the elements from the two equal-regions in the center so that there is only one equal-region in the center 
+surrounding by the less-region on the left and the greater-region on the right. 
+To do so, first, we swap the elements in the left equal-region with the elements on the right end of the less-region. 
+Similarly, the elements in the right equal-region are swapped with the elements on the left end of the greater-region.
+
+Finally, we'll be left with only three partitions, and we can further use the same approach to partition the less and the greater regions.
+        | LESS | EQUAL | GREATER |
+        
+Algorithm Analysis
+In general, the Quicksort algorithm has an average-case time complexity of O(n*log(n)) and worst-case time complexity of O(n2). 
+With a high density of duplicate keys, we almost always get the worst-case performance with the trivial implementation of Quicksort.
+
+However, when we use the three-way partitioning variant of Quicksort, such as DNF partitioning or Bentley's partitioning, 
+we're able to prevent the negative effect of duplicate keys. Further, as the density of duplicate keys increase, 
+the performance of our algorithm improves as well. As a result, we get the best-case performance when all keys are equal, 
+and we get a single partition containing all equal keys in linear time.
+
+Nevertheless, we must note that we're essentially adding overhead when we switch to a three-way partitioning scheme from the trivial single-pivot partitioning.
+
+For DNF based approach, the overhead doesn't depend on the density of repeated keys. So, if we use DNF partitioning for an array with all unique keys, 
+then we'll get poor performance as compared to the trivial implementation where we're optimally choosing the pivot.
+
+But, Bentley-McIlroy's approach does a smart thing as the overhead of moving the equal keys from the two extreme ends is dependent on their count. 
+As a result, if we use this algorithm for an array with all unique keys, even then, we'll get reasonably good performance.
+
