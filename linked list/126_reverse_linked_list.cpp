@@ -15,60 +15,62 @@ curr = next
 */
 
 // Iterative C++ program to reverse a linked list
-#include <iostream>
+#include<bits/stdc++.h>
+ 
 using namespace std;
  
-/* Link list node */
-struct Node {
+struct node {
     int data;
-    struct Node* next;
-    Node(int data)
-    {
-        this->data = data;
-        next = NULL;
-    }
+    struct node *next;
 };
  
-struct LinkedList {
-    Node* head;
-    LinkedList() { head = NULL; }
+// We construct a linked list and use this function to push elements to the list 
+void push(struct node **head_ref, int data) {
+    struct node *node;
+    node = (struct node*)malloc(sizeof(struct node));
+    node->data = data;
+    node->next = (*head_ref);
+    (*head_ref) = node;
+}
  
-    /* Function to reverse the linked list */
-    void reverse()
-    {
-        // Initialize current, previous and next pointers
-        Node* current = head;
-        Node *prev = NULL, *next = NULL;
- 
-        while (current != NULL) {
-            // Store next
-            next = current->next;
-            // Reverse current node's pointer
-            current->next = prev;
-            // Move pointers one position ahead.
-            prev = current;
-            current = next;
-        }
-        head = prev;
+// Function to reverse the list
+void reverse(struct node **head_ref) {
+    struct node *temp = NULL;
+    struct node *prev = NULL;
+    struct node *current = (*head_ref);
+    while(current != NULL) {
+        temp = current->next;
+        current->next = prev;
+        prev = current;
+        current = temp;
     }
+    (*head_ref) = prev;
+}
  
-    /* Function to print linked list */
-    void print()
-    {
-        struct Node* temp = head;
-        while (temp != NULL) {
-            cout << temp->data << " ";
-            temp = temp->next;
-        }
+// Checking our program 
+void printnodes(struct node *head) {
+    while(head != NULL) {
+        cout<<head->data<<" ";
+        head = head->next;
     }
+}
  
-    void push(int data)
-    {
-        Node* temp = new Node(data);
-        temp->next = head;
-        head = temp;
-    }
-};
+// Driver function
+int main() {
+    struct node *head = NULL;
+    push(&head, 28);
+    push(&head, 21);
+    push(&head, 14);
+    push(&head, 7);
+
+    cout << "Original Linked List" << endl;
+    printnodes(head);
+    reverse(&head);
+    cout << endl;
+    cout << "Reversed Linked List"<<endl;
+    printnodes(head);
+    return 0;
+}
 
 //----------------------------------------------------------------
 //Approach 2: REcursive
@@ -83,10 +85,10 @@ struct LinkedList {
 
 // Recursive C++ program to reverse
 // a linked list
-#include <iostream>
+#include<bits/stdc++.h>
 using namespace std;
  
-/* Link list node */
+ 
 struct Node {
     int data;
     struct Node* next;
@@ -108,20 +110,15 @@ struct LinkedList {
     {
         if (head == NULL || head->next == NULL)
             return head;
- 
-        /* reverse the rest list and put
-          the first element at the end */
+        // Recursive call
         Node* rest = reverse(head->next);
         head->next->next = head;
- 
-        /* tricky step -- see the diagram */
+        
         head->next = NULL;
  
-        /* fix the head pointer */
         return rest;
     }
  
-    /* Function to print linked list */
     void print()
     {
         struct Node* temp = head;
@@ -138,3 +135,21 @@ struct LinkedList {
         head = temp;
     }
 };
+ 
+int main()
+{
+    LinkedList ll;
+    ll.push(28);
+    ll.push(21);
+    ll.push(14);
+    ll.push(7);
+ 
+    cout << "Original Linked List\n";
+    ll.print();
+ 
+    ll.head = ll.reverse(ll.head);
+ 
+    cout << "\nReversed Linked List \n";
+    ll.print();
+    return 0;
+}
